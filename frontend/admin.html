@@ -1,0 +1,501 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Admin — KATAX</title>
+<meta name="robots" content="noindex, nofollow">
+<link rel="icon" type="image/svg+xml" href="assets/favicon.svg">
+<link rel="stylesheet" href="css/styles.css">
+<style>
+  body { background: var(--paper); }
+  .admin-shell { max-width: 720px; margin: 0 auto; padding: 48px 24px 80px; }
+  .admin-login { max-width: 360px; margin: 80px auto; }
+  .admin-login h1 { font-size: 1.4rem; }
+  .admin-tabs { display: flex; gap: 8px; margin-bottom: 28px; border-bottom: 1px solid var(--line); }
+  .admin-tab { padding: 10px 4px; margin-bottom: -1px; border: none; background: none; font-family: var(--sans); font-weight: 600; font-size: 0.95rem; color: var(--muted); cursor: pointer; border-bottom: 2px solid transparent; }
+  .admin-tab.is-active { color: var(--ink); border-bottom-color: var(--accent); }
+  .admin-panel { display: none; }
+  .admin-panel.is-active { display: block; }
+  .admin-card { background: var(--paper-2); border: 1px solid var(--line); border-radius: 6px; padding: 20px; margin-bottom: 16px; }
+  .admin-card h3 { margin-bottom: 4px; }
+  .admin-card .meta { font-family: var(--mono); font-size: 0.78rem; color: var(--muted); margin-bottom: 10px; }
+  .admin-card .msg-body { white-space: pre-wrap; font-size: 0.94rem; }
+  .admin-card .msg-actions { margin-top: 12px; }
+  .admin-empty { color: var(--muted); font-size: 0.95rem; padding: 24px 0; }
+  .service-row { border: 1px solid var(--line); border-radius: 6px; padding: 14px; margin-bottom: 12px; position: relative; }
+  .service-row .field { margin-bottom: 10px; }
+  .remove-service { position: absolute; top: 10px; inset-inline-end: 10px; background: none; border: none; color: var(--accent); font-size: 0.8rem; cursor: pointer; font-weight: 600; }
+  .admin-toolbar { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; }
+  .save-status { margin-top: 14px; font-size: 0.9rem; }
+  .save-status.ok { color: var(--confirm); }
+  .save-status.err { color: var(--accent); }
+  .btn-small { padding: 7px 14px; font-size: 0.85rem; }
+  .btn-link { background: none; border: none; color: var(--accent); font-weight: 600; cursor: pointer; font-size: 0.9rem; padding: 0; }
+  .status-badge { display: inline-block; padding: 3px 10px; border-radius: 999px; font-size: 0.76rem; font-weight: 600; }
+  .status-badge--lead { background: rgba(91,100,114,0.12); color: var(--muted); }
+  .status-badge--active { background: rgba(192,39,45,0.12); color: var(--accent); }
+  .status-badge--completed { background: rgba(28,122,59,0.12); color: var(--confirm); }
+  .status-badge--on-hold { background: rgba(211,163,79,0.18); color: #8A6D3A; }
+  .client-card__row { font-size: 0.9rem; color: var(--muted); margin-top: 4px; }
+  .client-card__notes { margin-top: 8px; font-size: 0.88rem; }
+</style>
+</head>
+<body>
+
+<div id="wrong-way-warning" style="display:none; min-height:100vh; background:#16213E; color:#fff; padding:40px 24px; font-family:sans-serif; text-align:center; position:fixed; inset:0; z-index:9999; overflow:auto;">
+  <h1 style="color:#fff; font-size:1.6rem; margin-bottom:20px;">⚠️ هذا الملف مش مفتوح صح</h1>
+  <p style="font-size:1.15rem; max-width:600px; margin:0 auto 28px; line-height:1.7;">
+    إنت فاتح هاد الملف مباشرة من جهازك (رابطه بيبلش بمسار زي C:/...)،<br>
+    بس لوحة التحكم ما بتشتغل إلا لما السيرفر يكون شغال.
+  </p>
+  <div style="background:#fff; color:#16213E; border-radius:8px; padding:24px; max-width:500px; margin:0 auto; text-align:right;">
+    <p style="font-weight:700; margin-bottom:14px;">الحل بثلاث خطوات:</p>
+    <p style="margin-bottom:10px;">1) تأكد السيرفر شغال (كتبت <code>npm start</code> بالترمنال وطلعلك <code>KATAX site running...</code>)</p>
+    <p style="margin-bottom:10px;">2) افتح تبويب جديد بالمتصفح</p>
+    <p style="margin-bottom:0;">3) اكتب بشريط العنوان بالضبط:<br><code style="background:#EDF2F4; padding:4px 8px; border-radius:4px; display:inline-block; margin-top:6px; direction:ltr;">localhost:3000/admin.html</code></p>
+  </div>
+</div>
+
+<div id="login-view" class="admin-shell admin-login">
+  <h1>KATAX Admin</h1>
+  <p class="muted">Enter the admin password to manage messages and site content.</p>
+  <form id="login-form">
+    <div class="field">
+      <label for="password">Password</label>
+      <input type="password" id="password" name="password" autocomplete="current-password" required>
+    </div>
+    <button type="submit" class="btn btn-primary">Log in</button>
+    <div id="login-status" class="save-status err" style="display:none;"></div>
+  </form>
+</div>
+
+<div id="dashboard-view" class="admin-shell" style="display:none;">
+  <div class="admin-toolbar">
+    <h1 style="margin:0;">KATAX Admin</h1>
+    <button id="logout-btn" class="btn-link">Log out</button>
+  </div>
+
+  <div class="admin-tabs">
+    <button class="admin-tab is-active" data-tab="clients">Clients</button>
+    <button class="admin-tab" data-tab="messages">Messages</button>
+    <button class="admin-tab" data-tab="content">Site content</button>
+  </div>
+
+  <!-- Clients -->
+  <div class="admin-panel is-active" data-panel="clients">
+    <div class="admin-toolbar">
+      <h3 style="margin:0;">Client database</h3>
+      <button type="button" id="add-client-btn" class="btn btn-primary btn-small">+ Add client</button>
+    </div>
+
+    <form id="client-form" class="admin-card" style="display:none;">
+      <input type="hidden" id="client-id">
+      <div class="field"><label for="client-name">Name</label><input type="text" id="client-name" required></div>
+      <div class="field"><label for="client-phone">Phone</label><input type="text" id="client-phone"></div>
+      <div class="field"><label for="client-email">Email</label><input type="email" id="client-email"></div>
+      <div class="field">
+        <label for="client-service">Service</label>
+        <select id="client-service">
+          <option value="">—</option>
+          <option>Personal tax return</option>
+          <option>Self-employment tax return</option>
+          <option>Business / corporate tax return</option>
+          <option>Bookkeeping / accounting</option>
+          <option>GST/HST return</option>
+        </select>
+      </div>
+      <div class="field">
+        <label for="client-status">Status</label>
+        <select id="client-status">
+          <option>Lead</option>
+          <option>Active</option>
+          <option>Completed</option>
+          <option>On Hold</option>
+        </select>
+      </div>
+      <div class="field"><label for="client-notes">Notes</label><textarea id="client-notes"></textarea></div>
+      <button type="submit" class="btn btn-primary btn-small">Save client</button>
+      <button type="button" id="cancel-client-btn" class="btn-link" style="margin-inline-start:14px;">Cancel</button>
+      <div id="client-save-status" class="save-status" style="display:none;"></div>
+    </form>
+
+    <div id="clients-list"></div>
+  </div>
+
+  <!-- Messages -->
+  <div class="admin-panel" data-panel="messages">
+    <div id="messages-list"></div>
+  </div>
+
+  <!-- Content editor -->
+  <div class="admin-panel" data-panel="content">
+    <form id="content-form">
+
+      <div class="admin-card">
+        <h3>Homepage headline</h3>
+        <div class="field">
+          <label for="hero-eyebrow">Small label above the headline</label>
+          <input type="text" id="hero-eyebrow" name="hero-eyebrow">
+        </div>
+        <div class="field">
+          <label for="hero-headline">Headline</label>
+          <input type="text" id="hero-headline" name="hero-headline" required>
+        </div>
+        <div class="field">
+          <label for="hero-subtext">Subtext</label>
+          <textarea id="hero-subtext" name="hero-subtext" required></textarea>
+        </div>
+      </div>
+
+      <div class="admin-card">
+        <h3>Contact details</h3>
+        <div class="field">
+          <label for="contact-phone">Phone</label>
+          <input type="text" id="contact-phone" name="contact-phone" required>
+        </div>
+        <div class="field">
+          <label for="contact-email">Email</label>
+          <input type="email" id="contact-email" name="contact-email" required>
+        </div>
+        <div class="field">
+          <label for="contact-address">Address line</label>
+          <input type="text" id="contact-address" name="contact-address" required>
+        </div>
+      </div>
+
+      <div class="admin-card">
+        <h3>Services</h3>
+        <p class="field-hint" style="margin-bottom:14px;">The short code (e.g. T1, GST34) shows next to each service on the site.</p>
+        <div id="services-list"></div>
+        <button type="button" id="add-service" class="btn btn-outline btn-small">+ Add service</button>
+      </div>
+
+      <button type="submit" class="btn btn-primary">Save changes</button>
+      <div id="save-status" class="save-status" style="display:none;"></div>
+    </form>
+  </div>
+</div>
+
+<script>
+(function () {
+  var TOKEN_KEY = 'katax_admin_token';
+
+  function getToken() { return localStorage.getItem(TOKEN_KEY); }
+  function setToken(t) { localStorage.setItem(TOKEN_KEY, t); }
+  function clearToken() { localStorage.removeItem(TOKEN_KEY); }
+
+  function authFetch(url, options) {
+    options = options || {};
+    options.headers = Object.assign({}, options.headers, { Authorization: 'Bearer ' + getToken() });
+    return fetch(url, options).then(function (res) {
+      if (res.status === 401) {
+        clearToken();
+        showLogin();
+        throw new Error('Session expired — please log in again.');
+      }
+      return res;
+    });
+  }
+
+  function showLogin() {
+    document.getElementById('login-view').style.display = 'block';
+    document.getElementById('dashboard-view').style.display = 'none';
+  }
+
+  function showDashboard() {
+    document.getElementById('login-view').style.display = 'none';
+    document.getElementById('dashboard-view').style.display = 'block';
+    loadClients();
+    loadMessages();
+    loadContent();
+  }
+
+  // ---- Login ----
+  document.getElementById('login-form').addEventListener('submit', function (e) {
+    e.preventDefault();
+    var password = document.getElementById('password').value;
+    var status = document.getElementById('login-status');
+    status.style.display = 'none';
+
+    fetch('/api/admin/login', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ password: password })
+    })
+      .then(function (res) { return res.json().then(function (data) { return { ok: res.ok, data: data }; }); })
+      .then(function (result) {
+        if (result.ok) {
+          setToken(result.data.token);
+          showDashboard();
+        } else {
+          status.textContent = result.data.error || 'Login failed.';
+          status.style.display = 'block';
+        }
+      })
+      .catch(function () {
+        status.textContent = 'Could not reach the server.';
+        status.style.display = 'block';
+      });
+  });
+
+  document.getElementById('logout-btn').addEventListener('click', function () {
+    authFetch('/api/admin/logout', { method: 'POST' }).finally(function () {
+      clearToken();
+      showLogin();
+    });
+  });
+
+  // ---- Tabs ----
+  document.querySelectorAll('.admin-tab').forEach(function (tab) {
+    tab.addEventListener('click', function () {
+      document.querySelectorAll('.admin-tab').forEach(function (t) { t.classList.remove('is-active'); });
+      document.querySelectorAll('.admin-panel').forEach(function (p) { p.classList.remove('is-active'); });
+      tab.classList.add('is-active');
+      document.querySelector('.admin-panel[data-panel="' + tab.dataset.tab + '"]').classList.add('is-active');
+    });
+  });
+
+  // ---- Clients ----
+  var editingClientId = null;
+
+  function statusBadgeClass(status) {
+    return 'status-badge status-badge--' + (status || 'lead').toLowerCase().replace(/\s+/g, '-');
+  }
+
+  function loadClients() {
+    var list = document.getElementById('clients-list');
+    list.innerHTML = '<p class="admin-empty">Loading…</p>';
+    authFetch('/api/admin/clients')
+      .then(function (res) { return res.json(); })
+      .then(function (clients) {
+        if (!clients.length) {
+          list.innerHTML = '<p class="admin-empty">No clients yet — add your first one above.</p>';
+          return;
+        }
+        list.innerHTML = '';
+        clients.forEach(function (c) {
+          var card = document.createElement('div');
+          card.className = 'admin-card';
+          card.innerHTML =
+            '<div style="display:flex;justify-content:space-between;align-items:start;">' +
+              '<h3 style="margin-bottom:4px;">' + escapeHtml(c.name) + '</h3>' +
+              '<span class="' + statusBadgeClass(c.status) + '">' + escapeHtml(c.status || 'Lead') + '</span>' +
+            '</div>' +
+            '<div class="client-card__row">' + [c.phone, c.email, c.service].filter(Boolean).map(escapeHtml).join(' · ') + '</div>' +
+            (c.notes ? '<div class="client-card__notes">' + escapeHtml(c.notes) + '</div>' : '') +
+            '<div class="msg-actions">' +
+              '<button type="button" class="btn-link edit-client" data-id="' + c.id + '">Edit</button>' +
+              '<span style="margin:0 8px;color:var(--line);">|</span>' +
+              '<button type="button" class="btn-link delete-client" data-id="' + c.id + '">Delete</button>' +
+            '</div>';
+          list.appendChild(card);
+
+          card.querySelector('.edit-client').addEventListener('click', function () { openClientForm(c); });
+          card.querySelector('.delete-client').addEventListener('click', function () {
+            if (!confirm('Delete ' + c.name + ' from the client database?')) return;
+            authFetch('/api/admin/clients/' + c.id, { method: 'DELETE' }).then(function () { loadClients(); });
+          });
+        });
+      })
+      .catch(function (e) {
+        list.innerHTML = '<p class="admin-empty">' + escapeHtml(e.message || 'Could not load clients.') + '</p>';
+      });
+  }
+
+  function openClientForm(client) {
+    editingClientId = client ? client.id : null;
+    document.getElementById('client-id').value = editingClientId || '';
+    document.getElementById('client-name').value = client ? client.name : '';
+    document.getElementById('client-phone').value = client ? client.phone : '';
+    document.getElementById('client-email').value = client ? client.email : '';
+    document.getElementById('client-service').value = client ? client.service : '';
+    document.getElementById('client-status').value = client ? client.status : 'Lead';
+    document.getElementById('client-notes').value = client ? client.notes : '';
+    document.getElementById('client-form').style.display = 'block';
+    document.getElementById('client-save-status').style.display = 'none';
+  }
+
+  function closeClientForm() {
+    document.getElementById('client-form').reset();
+    document.getElementById('client-form').style.display = 'none';
+    editingClientId = null;
+  }
+
+  document.getElementById('add-client-btn').addEventListener('click', function () { openClientForm(null); });
+  document.getElementById('cancel-client-btn').addEventListener('click', closeClientForm);
+
+  document.getElementById('client-form').addEventListener('submit', function (e) {
+    e.preventDefault();
+    var payload = {
+      name: document.getElementById('client-name').value.trim(),
+      phone: document.getElementById('client-phone').value.trim(),
+      email: document.getElementById('client-email').value.trim(),
+      service: document.getElementById('client-service').value,
+      status: document.getElementById('client-status').value,
+      notes: document.getElementById('client-notes').value.trim()
+    };
+    var url = editingClientId ? '/api/admin/clients/' + editingClientId : '/api/admin/clients';
+    var method = editingClientId ? 'PUT' : 'POST';
+    var status = document.getElementById('client-save-status');
+
+    authFetch(url, {
+      method: method,
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(payload)
+    })
+      .then(function (res) { return res.json().then(function (data) { return { ok: res.ok, data: data }; }); })
+      .then(function (result) {
+        if (result.ok) {
+          closeClientForm();
+          loadClients();
+        } else {
+          status.style.display = 'block';
+          status.className = 'save-status err';
+          status.textContent = result.data.error || 'Could not save client.';
+        }
+      })
+      .catch(function (e) {
+        status.style.display = 'block';
+        status.className = 'save-status err';
+        status.textContent = e.message || 'Could not reach the server.';
+      });
+  });
+
+  // ---- Messages ----
+  function loadMessages() {
+    var list = document.getElementById('messages-list');
+    list.innerHTML = '<p class="admin-empty">Loading…</p>';
+    authFetch('/api/admin/messages')
+      .then(function (res) { return res.json(); })
+      .then(function (messages) {
+        if (!messages.length) {
+          list.innerHTML = '<p class="admin-empty">No messages yet.</p>';
+          return;
+        }
+        list.innerHTML = '';
+        messages.forEach(function (m) {
+          var card = document.createElement('div');
+          card.className = 'admin-card';
+          var when = new Date(m.received_at).toLocaleString();
+          card.innerHTML =
+            '<h3>' + escapeHtml(m.name) + '</h3>' +
+            '<div class="meta">' + escapeHtml(m.email) + (m.phone ? ' · ' + escapeHtml(m.phone) : '') + ' · ' + when + (m.service ? ' · ' + escapeHtml(m.service) : '') + '</div>' +
+            '<div class="msg-body">' + escapeHtml(m.message) + '</div>' +
+            '<div class="msg-actions"><button type="button" class="btn-link delete-msg" data-id="' + m.id + '">Delete</button></div>';
+          list.appendChild(card);
+        });
+        list.querySelectorAll('.delete-msg').forEach(function (btn) {
+          btn.addEventListener('click', function () {
+            if (!confirm('Delete this message?')) return;
+            authFetch('/api/admin/messages/' + btn.dataset.id, { method: 'DELETE' })
+              .then(function () { loadMessages(); });
+          });
+        });
+      })
+      .catch(function (e) {
+        list.innerHTML = '<p class="admin-empty">' + escapeHtml(e.message || 'Could not load messages.') + '</p>';
+      });
+  }
+
+  function escapeHtml(str) {
+    var div = document.createElement('div');
+    div.textContent = str == null ? '' : String(str);
+    return div.innerHTML;
+  }
+
+  // ---- Content editor ----
+  function serviceRowTemplate(service) {
+    service = service || { code: '', title: '', description: '' };
+    var row = document.createElement('div');
+    row.className = 'service-row';
+    row.innerHTML =
+      '<button type="button" class="remove-service">Remove</button>' +
+      '<div class="field"><label>Code</label><input type="text" class="svc-code" value="' + escapeAttr(service.code) + '" required></div>' +
+      '<div class="field"><label>Title</label><input type="text" class="svc-title" value="' + escapeAttr(service.title) + '" required></div>' +
+      '<div class="field"><label>Description</label><textarea class="svc-desc" required>' + escapeHtml(service.description) + '</textarea></div>';
+    row.querySelector('.remove-service').addEventListener('click', function () { row.remove(); });
+    return row;
+  }
+
+  function escapeAttr(str) { return escapeHtml(str).replace(/"/g, '&quot;'); }
+
+  document.getElementById('add-service').addEventListener('click', function () {
+    document.getElementById('services-list').appendChild(serviceRowTemplate());
+  });
+
+  function loadContent() {
+    authFetch('/api/admin/content')
+      .then(function (res) { return res.json(); })
+      .then(function (content) {
+        document.getElementById('hero-eyebrow').value = content.hero.eyebrow || '';
+        document.getElementById('hero-headline').value = content.hero.headline || '';
+        document.getElementById('hero-subtext').value = content.hero.subtext || '';
+        document.getElementById('contact-phone').value = content.contact.phone || '';
+        document.getElementById('contact-email').value = content.contact.email || '';
+        document.getElementById('contact-address').value = content.contact.addressLine || '';
+
+        var list = document.getElementById('services-list');
+        list.innerHTML = '';
+        (content.services || []).forEach(function (s) { list.appendChild(serviceRowTemplate(s)); });
+      })
+      .catch(function () { /* authFetch already handles session expiry */ });
+  }
+
+  document.getElementById('content-form').addEventListener('submit', function (e) {
+    e.preventDefault();
+    var status = document.getElementById('save-status');
+
+    var services = Array.from(document.querySelectorAll('.service-row')).map(function (row) {
+      return {
+        code: row.querySelector('.svc-code').value.trim(),
+        title: row.querySelector('.svc-title').value.trim(),
+        description: row.querySelector('.svc-desc').value.trim()
+      };
+    });
+
+    var payload = {
+      hero: {
+        eyebrow: document.getElementById('hero-eyebrow').value.trim(),
+        headline: document.getElementById('hero-headline').value.trim(),
+        subtext: document.getElementById('hero-subtext').value.trim()
+      },
+      contact: {
+        phone: document.getElementById('contact-phone').value.trim(),
+        email: document.getElementById('contact-email').value.trim(),
+        addressLine: document.getElementById('contact-address').value.trim()
+      },
+      services: services
+    };
+
+    authFetch('/api/admin/content', {
+      method: 'PUT',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(payload)
+    })
+      .then(function (res) { return res.json().then(function (data) { return { ok: res.ok, data: data }; }); })
+      .then(function (result) {
+        status.style.display = 'block';
+        status.className = 'save-status ' + (result.ok ? 'ok' : 'err');
+        status.textContent = result.ok ? 'Saved — the live site now reflects these changes.' : (result.data.error || 'Save failed.');
+      })
+      .catch(function (e) {
+        status.style.display = 'block';
+        status.className = 'save-status err';
+        status.textContent = e.message || 'Could not reach the server.';
+      });
+  });
+
+  // ---- Init ----
+  if (window.location.protocol === 'file:') {
+    document.getElementById('wrong-way-warning').style.display = 'block';
+    document.getElementById('login-view').style.display = 'none';
+    document.getElementById('dashboard-view').style.display = 'none';
+    return;
+  }
+  if (getToken()) { showDashboard(); } else { showLogin(); }
+})();
+</script>
+
+</body>
+</html>

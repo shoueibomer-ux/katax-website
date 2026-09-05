@@ -1,0 +1,9 @@
+<svg width="220" height="56" viewBox="0 0 220 56" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="KATAX logo">
+  <g>
+    <rect x="2" y="10" width="7" height="36" fill="#C0272D"/>
+    <rect x="13" y="4" width="7" height="42" fill="#FFFFFF"/>
+    <rect x="24" y="16" width="7" height="30" fill="#1C7A3B"/>
+  </g>
+  <text x="42" y="30" font-family="IBM Plex Sans, Arial, sans-serif" font-weight="700" font-size="21" fill="#FFFFFF" letter-spacing="0.5">KATAX</text>
+  <text x="42" y="46" font-family="IBM Plex Sans, Arial, sans-serif" font-weight="500" font-size="9.5" fill="#9FAEC7" letter-spacing="0.4">ACCOUNTING &amp; TAX SERVICES</text>
+</svg>

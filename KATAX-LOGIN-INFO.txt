@@ -1,0 +1,54 @@
+=====================================
+   KATAX WEBSITE — QUICK REFERENCE
+=====================================
+
+WEBSITE (while the server is running):
+  http://localhost:3000
+
+ADMIN DASHBOARD (while the server is running):
+  http://localhost:3000/admin.html
+
+ADMIN PASSWORD:
+  katax2026!
+
+
+=====================================
+   HOW TO START THE SERVER
+=====================================
+
+1. Open VS Code
+2. Open a terminal: Ctrl + `
+3. Make sure you're in the backend folder. If not, type:
+   cd C:\Users\User\Downloads\katax-website-v17\katax-website\backend
+
+4. Type this and press Enter:
+   npm start
+
+5. Wait until you see this line:
+   KATAX site running at http://localhost:3000
+
+6. Leave that terminal window open and running — closing it stops the website.
+
+7. Open your browser and go to:
+   http://localhost:3000/admin.html
+
+8. Log in with the password above.
+
+
+=====================================
+   NOTES
+=====================================
+
+- The server must stay running the whole time you want the site or
+  admin dashboard to work. If you close VS Code or the terminal, the
+  site goes offline until you run "npm start" again.
+
+- The very first time on a new computer, run this once before
+  "npm start":
+     npm install
+
+- If you ever change the password, edit the file:
+     backend\.env
+  and change the line that says:
+     ADMIN_PASSWORD=katax2026!
+  Then stop the server (Ctrl+C in the terminal) and run "npm start" again.

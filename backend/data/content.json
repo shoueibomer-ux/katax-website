@@ -1,0 +1,39 @@
+{
+  "hero": {
+    "eyebrow": "TORONTO · PERSONAL & BUSINESS TAX",
+    "headline": "Your taxes, filed right, by someone who picks up the phone.",
+    "subtext": "Kaya for Accounting & Tax Services Inc. handles personal, self-employment, business and corporate returns, GST/HST filing, and year-round bookkeeping — with one person accountable for your file from intake to e-file confirmation."
+  },
+  "contact": {
+    "phone": "437-230-5860",
+    "email": "info@katax.ca",
+    "addressLine": "Toronto, ON M1E 4Y2"
+  },
+  "services": [
+    {
+      "code": "T1",
+      "title": "Personal income tax returns",
+      "description": "E-filed personal returns, prepared and reviewed before they're sent."
+    },
+    {
+      "code": "T2125",
+      "title": "Self-employment tax returns",
+      "description": "Business-use-of-home, vehicle expenses, and income reporting done properly."
+    },
+    {
+      "code": "T2",
+      "title": "Business income tax returns",
+      "description": "Corporate returns prepared alongside your bookkeeping, not disconnected from it."
+    },
+    {
+      "code": "GL",
+      "title": "Complete accounting & bookkeeping",
+      "description": "Monthly or quarterly books kept current, reconciled, and ready for tax time."
+    },
+    {
+      "code": "GST34",
+      "title": "GST/HST returns",
+      "description": "Registration, filing, and reconciliation for GST/HST-registered businesses."
+    }
+  ]
+}

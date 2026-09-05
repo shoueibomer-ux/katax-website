@@ -1,0 +1,28 @@
+<svg width="1050" height="600" viewBox="0 0 350 200" xmlns="http://www.w3.org/2000/svg" font-family="'IBM Plex Sans','Helvetica Neue',Arial,sans-serif">
+<defs><clipPath id="cardClip"><rect x="0" y="0" width="350" height="200"/></clipPath></defs>
+<g clip-path="url(#cardClip)">
+
+  <!-- Base: navy field -->
+  <rect x="0" y="0" width="350" height="200" fill="#16213E"/>
+
+  <!-- Curved terracotta block, left side (mirrors the front card's navy curve) -->
+  <circle cx="-50" cy="100" r="175" fill="#EFDCD2"/>
+
+  <!-- Logo lockup, centered-right on the navy area -->
+  <g transform="translate(178, 82)">
+    <rect x="0" y="10" width="7" height="28" fill="#C0272D"/>
+    <rect x="10" y="0" width="7" height="38" fill="#FFFFFF"/>
+    <rect x="20" y="14" width="7" height="24" fill="#1C7A3B"/>
+    <text x="36" y="24" font-size="19" font-weight="700" fill="#FFFFFF" letter-spacing="0.4">KATAX</text>
+    <text x="36" y="35" font-size="6.5" font-weight="500" fill="#B9C4D6" letter-spacing="0.7">ACCOUNTING &amp; TAX SERVICES</text>
+  </g>
+
+  <!-- Tagline, sitting inside the light curve, bottom-left -->
+  <text x="24" y="178" font-size="7.5" font-style="italic" fill="#16213E" opacity="0.75">Your Trusted Partner</text>
+  <text x="24" y="188" font-size="7.5" font-style="italic" fill="#16213E" opacity="0.75">Along The Way</text>
+
+  <!-- Thin accent rule under the wordmark -->
+  <line x1="214" y1="127" x2="290" y2="127" stroke="#1B1B1B" stroke-width="1.2"/>
+
+</g>
+</svg>

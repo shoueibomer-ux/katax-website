@@ -1,0 +1,66 @@
+<svg width="1050" height="600" viewBox="0 0 350 200" xmlns="http://www.w3.org/2000/svg" font-family="'IBM Plex Sans','Helvetica Neue',Arial,sans-serif">
+
+  <!-- Card background -->
+  <rect x="0" y="0" width="350" height="200" fill="#FFFFFF"/>
+
+  <!-- Left accent bar -->
+  <rect x="0" y="0" width="6" height="200" fill="#9C3B2E"/>
+
+  <!-- Subtle ledger-line texture, top-right corner only -->
+  <g opacity="0.5">
+    <line x1="230" y1="14" x2="340" y2="14" stroke="#C7D1D6" stroke-width="0.6"/>
+    <line x1="230" y1="20" x2="340" y2="20" stroke="#C7D1D6" stroke-width="0.6"/>
+    <line x1="230" y1="26" x2="340" y2="26" stroke="#C7D1D6" stroke-width="0.6"/>
+  </g>
+
+  <!-- Logo lockup: three bars + wordmark -->
+  <g transform="translate(24, 22)">
+    <rect x="0" y="10" width="6" height="24" fill="#9C3B2E"/>
+    <rect x="9" y="2" width="6" height="32" fill="#16213E"/>
+    <rect x="18" y="14" width="6" height="20" fill="#9C3B2E"/>
+    <text x="32" y="21" font-size="17" font-weight="700" fill="#16213E" letter-spacing="0.3">KATAX</text>
+    <text x="32" y="32" font-size="6.5" font-weight="500" fill="#5B6472" letter-spacing="0.6">ACCOUNTING &amp; TAX SERVICES</text>
+  </g>
+
+  <!-- Name and title -->
+  <text x="24" y="90" font-size="19" font-weight="700" fill="#16213E">ESSA ISMAIL</text>
+  <text x="24" y="103" font-size="9.5" font-weight="500" fill="#9C3B2E" letter-spacing="0.4">PRINCIPAL</text>
+
+  <!-- Divider -->
+  <line x1="24" y1="115" x2="200" y2="115" stroke="#C7D1D6" stroke-width="0.75"/>
+
+  <!-- Contact block with icons -->
+  <g font-size="8.6" fill="#202634" font-weight="500">
+
+    <!-- phone -->
+    <g transform="translate(24, 126)" stroke="#16213E" stroke-width="1.3" fill="none" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M0 1.2h2.6l1.1 3-1.6 1.3a9.6 9.6 0 0 0 5 5l1.3-1.6 3 1.1v2.6c0 .9-.8 1.6-1.6 1.6C4.9 14.2.8 10.1 0 4.6c0-.8.7-1.6.8-2.4z" transform="scale(0.9)"/>
+    </g>
+    <text x="40" y="132">437-230-5860</text>
+
+    <!-- email -->
+    <g transform="translate(24, 141)" stroke="#16213E" stroke-width="1.3" fill="none" stroke-linecap="round" stroke-linejoin="round">
+      <rect x="0" y="0" width="14" height="10" rx="1.2"/>
+      <path d="M0.5 0.8 7 6.5l6.5-5.7"/>
+    </g>
+    <text x="40" y="150">admin@katax.ca</text>
+
+    <!-- website -->
+    <g transform="translate(24, 156)" stroke="#16213E" stroke-width="1.3" fill="none" stroke-linecap="round" stroke-linejoin="round">
+      <circle cx="6" cy="6" r="6"/>
+      <path d="M0 6h12M6 0c2.2 1.7 2.2 10.3 0 12M6 0C3.8 1.7 3.8 10.3 6 12"/>
+    </g>
+    <text x="40" y="165">www.katax.ca</text>
+
+    <!-- address -->
+    <g transform="translate(24, 171)" stroke="#16213E" stroke-width="1.3" fill="none" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M6 14s5-4.6 5-8.4A5 5 0 0 0 1 5.6C1 9.4 6 14 6 14z"/>
+      <circle cx="6" cy="5.6" r="1.7"/>
+    </g>
+    <text x="40" y="180">Toronto, ON M1E 4Y2</text>
+  </g>
+
+  <!-- Tagline, bottom-right -->
+  <text x="326" y="188" font-size="7.5" font-style="italic" fill="#5B6472" text-anchor="end">Your Trusted Partner Along The Way</text>
+
+</svg>
