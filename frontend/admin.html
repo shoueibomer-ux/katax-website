@@ -20,7 +20,19 @@
   .admin-card { background: var(--paper-2); border: 1px solid var(--line); border-radius: 6px; padding: 20px; margin-bottom: 16px; }
   .admin-card h3 { margin-bottom: 4px; }
   .admin-card .meta { font-family: var(--mono); font-size: 0.78rem; color: var(--muted); margin-bottom: 10px; }
-  .admin-card .msg-body { white-space: pre-wrap; font-size: 0.94rem; }
+
+.admin-card .msg-body {
+  display: none;
+  white-space: pre-wrap;
+  font-size: 0.94rem;
+}
+
+.admin-card.is-open .msg-body {
+  display: block;
+}
+
+
+
   .admin-card .msg-actions { margin-top: 12px; }
   .admin-empty { color: var(--muted); font-size: 0.95rem; padding: 24px 0; }
   .service-row { border: 1px solid var(--line); border-radius: 6px; padding: 14px; margin-bottom: 12px; position: relative; }
@@ -382,7 +394,14 @@
             '<h3>' + escapeHtml(m.name) + '</h3>' +
             '<div class="meta">' + escapeHtml(m.email) + (m.phone ? ' · ' + escapeHtml(m.phone) : '') + ' · ' + when + (m.service ? ' · ' + escapeHtml(m.service) : '') + '</div>' +
             '<div class="msg-body">' + escapeHtml(m.message) + '</div>' +
+          
             '<div class="msg-actions"><button type="button" class="btn-link delete-msg" data-id="' + m.id + '">Delete</button></div>';
+        card.addEventListener('click', function (e) {
+  if (e.target.closest('button')) return;
+  card.classList.toggle('is-open');
+});
+
+
           list.appendChild(card);
         });
         list.querySelectorAll('.delete-msg').forEach(function (btn) {
