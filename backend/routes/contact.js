@@ -60,19 +60,27 @@ router.post('/', async (req, res) => {
     return res.status(500).json({ error: 'Could not save your message. Please call us instead.' });
   }
 
-  // Best-effort email notification — never fails the request if it errors
-  const transport = getTransport();
-  if (transport) {
-    const to = process.env.CONTACT_TO || 'info@katax.ca';
-    transport.sendMail({
-      from: process.env.SMTP_USER,
-      to,
-      replyTo: email,
-      subject: `New website enquiry — ${name}`,
-      text:
-        `Name: ${name}\nEmail: ${email}\nPhone: ${phone || 'n/a'}\nService: ${service || 'n/a'}\n\n${message}`
-    }).catch((e) => console.error('Email notification failed (submission was still saved):', e.message));
+  // Send email notification through Supabase Edge Function
+try {
+  const supabase = getSupabase();
+
+  const { error } = await supabase.functions.invoke('send-contact-email', {
+    body: {
+      name,
+      email,
+      phone,
+      service,
+      message
+    }
+  });
+
+  if (error) {
+    console.error('Email notification failed:', error.message);
   }
+} catch (e) {
+  console.error('Email notification failed:', e.message);
+}
+
 
   return res.status(200).json({ ok: true });
 });
