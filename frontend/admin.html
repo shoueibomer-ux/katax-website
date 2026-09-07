@@ -31,6 +31,24 @@
   display: block;
 }
 
+.admin-card {
+  cursor: pointer;
+}
+
+.admin-card:hover {
+  transform: translateY(-1px);
+}
+
+.admin-card .msg-actions {
+  display: none;
+}
+
+.admin-card.is-open .msg-actions {
+  display: block;
+}
+
+
+
 
 
   .admin-card .msg-actions { margin-top: 12px; }
@@ -390,16 +408,32 @@
           var card = document.createElement('div');
           card.className = 'admin-card';
           var when = new Date(m.received_at).toLocaleString();
-          card.innerHTML =
-            '<h3>' + escapeHtml(m.name) + '</h3>' +
-            '<div class="meta">' + escapeHtml(m.email) + (m.phone ? ' · ' + escapeHtml(m.phone) : '') + ' · ' + when + (m.service ? ' · ' + escapeHtml(m.service) : '') + '</div>' +
-            '<div class="msg-body">' + escapeHtml(m.message) + '</div>' +
           
-            '<div class="msg-actions"><button type="button" class="btn-link delete-msg" data-id="' + m.id + '">Delete</button></div>';
-        card.addEventListener('click', function (e) {
+card.innerHTML =
+  '<div style="display:flex;justify-content:space-between;gap:16px;align-items:center;">' +
+    '<div>' +
+      '<h3 style="margin-bottom:4px;">' + escapeHtml(m.name) + '</h3>' +
+      '<div class="meta">' + escapeHtml(m.email) + (m.phone ? ' · ' + escapeHtml(m.phone) : '') + ' · ' + when + '</div>' +
+    '</div>' +
+    '<span style="font-size:0.82rem;color:var(--muted);">Open message</span>' +
+  '</div>' +
+  '<div class="msg-body" style="margin-top:16px;">' +
+    '<strong>Message</strong><br><br>' +
+    escapeHtml(m.message) +
+  '</div>' +
+  '<div class="msg-actions">' +
+    '<button type="button" class="btn-link delete-msg" data-id="' + m.id + '">Delete</button>' +
+  '</div>';
+
+
+
+
+card.addEventListener('click', function (e) {
   if (e.target.closest('button')) return;
   card.classList.toggle('is-open');
 });
+
+
 
 
           list.appendChild(card);
