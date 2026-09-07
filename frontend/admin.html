@@ -107,13 +107,23 @@
   </div>
 
   <div class="admin-tabs">
-    <button class="admin-tab is-active" data-tab="clients">Clients</button>
+   <button class="admin-tab is-active" data-tab="dashboard">Dashboard</button>
+    <button class="admin-tab" data-tab="clients">Clients</button>
     <button class="admin-tab" data-tab="messages">Messages</button>
     <button class="admin-tab" data-tab="content">Site content</button>
   </div>
+<!-- Dashboard -->
+<div class="admin-panel is-active" data-panel="dashboard">
+  <div class="admin-card">
+    <h3>Dashboard</h3>
+    <p>Welcome to KATAX Admin Dashboard</p>
+  </div>
+</div>
+
+
 
   <!-- Clients -->
-  <div class="admin-panel is-active" data-panel="clients">
+  <div class="admin-panel" data-panel="clients">
     <div class="admin-toolbar">
       <h3 style="margin:0;">Client database</h3>
       <button type="button" id="add-client-btn" class="btn btn-primary btn-small">+ Add client</button>
