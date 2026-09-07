@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>News & Updates — KATAX</title>
+  <meta name="description" content="News, announcements and tax updates from KATAX.">
+  <link rel="icon" type="image/svg+xml" href="assets/favicon.svg">
+  <link rel="stylesheet" href="css/styles.css">
+
+  <style>
+    .news-page {
+      max-width: 900px;
+      margin: 0 auto;
+      padding: 60px 24px 100px;
+    }
+
+    .news-header {
+      margin-bottom: 40px;
+    }
+
+    .news-header h1 {
+      margin-bottom: 10px;
+    }
+
+    .post-card {
+      border: 1px solid var(--line);
+      padding: 24px;
+      margin-bottom: 20px;
+      border-radius: 8px;
+      background: var(--paper);
+    }
+
+    .post-date {
+      font-size: 0.82rem;
+      color: var(--muted);
+      margin-bottom: 10px;
+    }
+
+    .post-card h2 {
+      margin-bottom: 12px;
+    }
+
+    .post-body {
+      white-space: pre-wrap;
+      line-height: 1.7;
+    }
+
+    .empty-posts {
+      color: var(--muted);
+      padding: 30px 0;
+    }
+  </style>
+</head>
+
+<body>
+
+<header class="site-header">
+  <nav class="nav">
+    <a class="nav__logo" href="index.html" aria-label="KATAX home">
+      <img src="assets/logo.svg" alt="KATAX — Kaya for Accounting & Tax Services Inc.">
+    </a>
+
+    <button class="nav__toggle" aria-label="Toggle menu" aria-expanded="false">
+      <span></span>
+    </button>
+
+    <ul class="nav__links">
+      <li><a href="index.html">Home</a></li>
+      <li><a href="about.html">About</a></li>
+      <li><a href="services.html">Services</a></li>
+      <li><a href="contact.html">Contact</a></li>
+      <li><a href="news.html">News</a></li>
+    </ul>
+
+    <a class="nav__call mono" href="tel:+14372305860">437-230-5860</a>
+  </nav>
+</header>
+
+<main class="news-page">
+
+  <div class="news-header">
+    <p class="eyebrow">KATAX UPDATES</p>
+    <h1>News & Announcements</h1>
+    <p>Tax updates, announcements and helpful information from KATAX.</p>
+  </div>
+
+  <div id="posts">
+    <p class="empty-posts">Loading updates…</p>
+  </div>
+
+</main>
+
+<script>
+  const postsContainer = document.getElementById('posts');
+
+  fetch('/api/posts')
+    .then(function (response) {
+      if (!response.ok) throw new Error('Unable to load posts');
+      return response.json();
+    })
+    .then(function (posts) {
+      if (!posts.length) {
+        postsContainer.innerHTML =
+          '<p class="empty-posts">No updates have been published yet.</p>';
+        return;
+      }
+
+      postsContainer.innerHTML = '';
+
+      posts.forEach(function (post) {
+        const article = document.createElement('article');
+        article.className = 'post-card';
+
+        const date = new Date(post.created_at).toLocaleDateString();
+
+        const dateElement = document.createElement('div');
+        dateElement.className = 'post-date';
+        dateElement.textContent = date;
+
+        const title = document.createElement('h2');
+        title.textContent = post.title;
+
+        const body = document.createElement('div');
+        body.className = 'post-body';
+        body.textContent = post.content;
+
+        article.appendChild(dateElement);
+        article.appendChild(title);
+        article.appendChild(body);
+
+        postsContainer.appendChild(article);
+      });
+    })
+    .catch(function () {
+      postsContainer.innerHTML =
+        '<p class="empty-posts">Updates are temporarily unavailable.</p>';
+    });
+</script>
+
+<script src="js/main.js"></script>
+
+</body>
+</html>
+
