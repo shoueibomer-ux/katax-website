@@ -428,15 +428,72 @@ card.innerHTML =
 
 
 
+
 card.addEventListener('click', function (e) {
   if (e.target.closest('button')) return;
-  card.classList.toggle('is-open');
+
+  var messageWindow = window.open('', '_blank');
+
+  if (!messageWindow) {
+    alert('Please allow pop-ups to open the message.');
+    return;
+  }
+
+  messageWindow.document.write(
+    '<!DOCTYPE html>' +
+    '<html>' +
+    '<head>' +
+    '<meta charset="UTF-8">' +
+    '<meta name="viewport" content="width=device-width, initial-scale=1.0">' +
+    '<title>Message - ' + escapeHtml(m.name) + '</title>' +
+    '<style>' +
+    'body{font-family:Arial,sans-serif;background:#f5f7fa;margin:0;padding:40px;color:#222;}' +
+    '.message-page{max-width:850px;margin:auto;background:#fff;padding:35px;border-radius:12px;box-shadow:0 8px 30px rgba(0,0,0,.08);}' +
+    '.header{border-bottom:1px solid #ddd;padding-bottom:20px;margin-bottom:28px;}' +
+    '.name{font-size:28px;font-weight:700;margin-bottom:8px;}' +
+    '.meta{color:#666;line-height:1.7;font-size:14px;}' +
+    '.label{font-weight:700;margin-bottom:12px;font-size:16px;}' +
+    '.message{font-size:17px;line-height:1.8;white-space:pre-wrap;min-height:150px;}' +
+    '.actions{border-top:1px solid #eee;margin-top:35px;padding-top:20px;display:flex;gap:12px;}' +
+    'button{padding:11px 18px;border:0;border-radius:7px;cursor:pointer;font-size:14px;}' +
+    '.print{background:#111;color:#fff;}' +
+    '.close{background:#eee;color:#222;}' +
+    '@media print{body{background:#fff;padding:0}.message-page{box-shadow:none;max-width:none}.actions{display:none}}' +
+    '</style>' +
+    '</head>' +
+    '<body>' +
+    '<div class="message-page">' +
+      '<div class="header">' +
+        '<div class="name">' + escapeHtml(m.name) + '</div>' +
+        '<div class="meta">' +
+          '<strong>Email:</strong> ' + escapeHtml(m.email) +
+          (m.phone ? '<br><strong>Phone:</strong> ' + escapeHtml(m.phone) : '') +
+          '<br><strong>Date:</strong> ' + when +
+        '</div>' +
+      '</div>' +
+      '<div class="label">Message</div>' +
+      '<div class="message">' + escapeHtml(m.message) + '</div>' +
+      '<div class="actions">' +
+        '<button class="print" onclick="window.print()">Print / Save PDF</button>' +
+        '<button class="close" onclick="window.close()">Close</button>' +
+      '</div>' +
+    '</div>' +
+    '</body>' +
+    '</html>'
+  );
+
+  messageWindow.document.close();
 });
-
-
-
-
           list.appendChild(card);
+
+
+
+
+
+
+
+
+
         });
         list.querySelectorAll('.delete-msg').forEach(function (btn) {
           btn.addEventListener('click', function () {
