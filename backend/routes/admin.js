@@ -223,4 +223,67 @@ router.delete('/clients/:id', requireAuth, async (req, res) => {
   }
 });
 
+
+// ---- News / Posts ----
+
+router.get('/posts', requireAuth, async (req, res) => {
+  try {
+    const supabase = getSupabase();
+    const { data, error } = await supabase
+      .from('posts')
+      .select('*')
+      .order('created_at', { ascending: false });
+
+    if (error) throw error;
+    res.json(data || []);
+  } catch (e) {
+    console.error('Failed to load posts:', e.message);
+    res.status(500).json({ error: 'Could not load posts.' });
+  }
+});
+
+router.post('/posts', requireAuth, async (req, res) => {
+  const title = (req.body.title || '').trim();
+  const content = (req.body.content || '').trim();
+
+  if (!title || !content) {
+    return res.status(400).json({ error: 'Title and content are required.' });
+  }
+
+  try {
+    const supabase = getSupabase();
+    const { data, error } = await supabase
+      .from('posts')
+      .insert({ title, content })
+      .select()
+      .single();
+
+    if (error) throw error;
+    res.json(data);
+  } catch (e) {
+    console.error('Failed to publish post:', e.message);
+    res.status(500).json({ error: 'Could not publish post.' });
+  }
+});
+
+router.delete('/posts/:id', requireAuth, async (req, res) => {
+  try {
+    const supabase = getSupabase();
+    const { error } = await supabase
+      .from('posts')
+      .delete()
+      .eq('id', req.params.id);
+
+    if (error) throw error;
+    res.json({ ok: true });
+  } catch (e) {
+    console.error('Failed to delete post:', e.message);
+    res.status(500).json({ error: 'Could not delete post.' });
+  }
+});
+
+
+
+
+
 module.exports = router;
