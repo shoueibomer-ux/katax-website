@@ -452,11 +452,40 @@ function loadPosts() {
           '<h3>' + escapeHtml(post.title) + '</h3>' +
           '<div class="msg-body">' + escapeHtml(post.content) + '</div>' +
           '<div class="msg-actions">' +
+         '<button type="button" class="btn-link edit-post" data-id="' + post.id + '">Edit</button> ' +
+
           '<button type="button" class="btn-link delete-post" data-id="' + post.id + '">Delete</button>' +
           '</div>';
 
         list.appendChild(card);
       });
+list.querySelectorAll('.edit-post').forEach(function (btn) {
+  btn.addEventListener('click', function () {
+    var post = posts.find(function (p) {
+      return String(p.id) === String(btn.dataset.id);
+    });
+
+    if (!post) return;
+
+    var newTitle = prompt('Edit title:', post.title);
+    if (newTitle === null) return;
+
+    var newContent = prompt('Edit content:', post.content);
+    if (newContent === null) return;
+
+    authFetch('/api/admin/posts/' + btn.dataset.id, {
+      method: 'PUT',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        title: newTitle.trim(),
+        content: newContent.trim()
+      })
+    }).then(function () {
+      loadPosts();
+    });
+  });
+});
+
 
       list.querySelectorAll('.delete-post').forEach(function (btn) {
         btn.addEventListener('click', function () {
