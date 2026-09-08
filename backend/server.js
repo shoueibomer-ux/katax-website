@@ -5,6 +5,7 @@ const rateLimit = require('express-rate-limit');
 const contactRouter = require('./routes/contact');
 const contentRouter = require('./routes/content');
 const adminRouter = require('./routes/admin');
+const { getSupabase } = require('./db');
 
 const app = express();
 const PORT = process.env.PORT || 3000;
@@ -38,6 +39,24 @@ app.use('/api/contact', contactLimiter, contactRouter);
 app.use('/api/content', contentRouter);
 app.use('/api/admin/login', loginLimiter);
 app.use('/api/admin', adminRouter);
+app.get('/api/posts', async (req, res) => {
+  try {
+    const supabase = getSupabase();
+
+    const { data, error } = await supabase
+      .from('posts')
+      .select('*')
+      .order('created_at', { ascending: false });
+
+    if (error) throw error;
+
+    res.json(data || []);
+  } catch (e) {
+    console.error('Failed to load public posts:', e.message);
+    res.status(500).json({ error: 'Could not load posts.' });
+  }
+});
+
 
 app.get('/api/health', (req, res) => res.json({ ok: true }));
 
