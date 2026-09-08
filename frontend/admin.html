@@ -458,6 +458,14 @@ function loadPosts() {
           '</div>';
 
         list.appendChild(card);
+card.addEventListener('click', function (e) {
+  if (e.target.closest('button')) return;
+  card.classList.toggle('is-open');
+});
+
+
+
+
       });
 list.querySelectorAll('.edit-post').forEach(function (btn) {
   btn.addEventListener('click', function () {
