@@ -201,7 +201,7 @@ a:hover { text-decoration: underline; }
 }
 
 .nav__links.is-open {
-  max-height: 360px;
+  max-height: 260px;
   opacity: 1;
   visibility: visible;
 }
