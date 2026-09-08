@@ -181,29 +181,48 @@ a:hover { text-decoration: underline; }
 
 @media (max-width: 820px) {
   .nav__toggle { display: block; }
-  .nav__links {
-    position: absolute;
-    top: 100%;
-    left: 0;
-    right: 0;
-    background: var(--paper-2);
-    border-bottom: 1px solid var(--line);
-    flex-direction: column;
-    align-items: flex-start;
-    gap: 0;
-    max-height: 0;
-    overflow: hidden;
-    transition: max-height 0.25s ease;
-  }
-  .nav__links.is-open { max-height: 320px; }
-  .nav__links li { width: 100%; }
-  .nav__links a {
-    display: block;
-    padding: 14px 24px;
-    width: 100%;
-    border-bottom: 1px solid var(--line);
-  }
-  .nav__call { display: none; }
+.nav__links {
+  position: absolute;
+  top: 100%;
+  left: 12px;
+  right: 12px;
+  background: var(--paper-2);
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  padding: 8px;
+  flex-direction: column;
+  align-items: stretch;
+  gap: 4px;
+  max-height: 0;
+  opacity: 0;
+  visibility: hidden;
+  overflow: hidden;
+  transition: max-height 0.25s ease, opacity 0.2s ease;
+}
+
+.nav__links.is-open {
+  max-height: 360px;
+  opacity: 1;
+  visibility: visible;
+}
+
+.nav__links li {
+  width: 100%;
+}
+   
+
+.nav__links a {
+  display: block;
+  width: 100%;
+  padding: 14px 16px;
+  border-radius: 8px;
+}
+
+.nav__call {
+  display: none;
+}
+
+
 }
 
 /* ---------- Hero ---------- */
