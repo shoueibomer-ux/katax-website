@@ -3,14 +3,41 @@
 document.addEventListener('DOMContentLoaded', function () {
 
   // Mobile nav toggle
-  var toggle = document.querySelector('.nav__toggle');
-  var links = document.querySelector('.nav__links');
-  if (toggle && links) {
-    toggle.addEventListener('click', function () {
-      var isOpen = links.classList.toggle('is-open');
-      toggle.setAttribute('aria-expanded', isOpen ? 'true' : 'false');
-    });
+  
+var toggle = document.querySelector('.nav__toggle');
+var links = document.querySelector('.nav__links');
+var close = document.querySelector('.nav__close');
+
+if (toggle && links) {
+  function closeMenu() {
+    links.classList.remove('is-open');
+    toggle.setAttribute('aria-expanded', 'false');
   }
+
+  toggle.addEventListener('click', function () {
+    var isOpen = links.classList.toggle('is-open');
+    toggle.setAttribute('aria-expanded', isOpen ? 'true' : 'false');
+  });
+
+  if (close) {
+    close.addEventListener('click', closeMenu);
+  }
+
+  links.querySelectorAll('a').forEach(function (link) {
+    link.addEventListener('click', closeMenu);
+  });
+
+  document.addEventListener('click', function (e) {
+    if (
+      links.classList.contains('is-open') &&
+      !links.contains(e.target) &&
+      !toggle.contains(e.target)
+    ) {
+      closeMenu();
+    }
+  });
+}
+
 
   // Mark the current page's nav link as active
   var here = window.location.pathname.split('/').pop() || 'index.html';
