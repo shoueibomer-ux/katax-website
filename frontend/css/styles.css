@@ -280,17 +280,12 @@ top: 0; right: 78%; bottom: 0; left: 0;
 
 /* Final mobile menu design */
 .nav__links {
-  width: 64%;
+  width: 60%;
   max-width: 320px;
   padding: 18px 16px 24px;
 
-  background:
-    repeating-linear-gradient(
-      to bottom,
-      #ffffff 0,
-      #ffffff 47px,
-      rgba(22, 33, 62, 0.025) 48px
-    );
+ background: #ffffff;
+
 
   box-shadow: -8px 0 24px rgba(15, 23, 42, 0.08);
 }
@@ -299,7 +294,7 @@ body:has(.nav__links.is-open)::before {
   top: 0;
   left: 0;
   bottom: 0;
-  right: min(64vw, 320px);
+  right: min(60vw, 320px);
   background: rgba(15, 23, 42, 0.58);
   z-index: 999;
 }
