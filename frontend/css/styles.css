@@ -184,6 +184,17 @@ a:hover { text-decoration: underline; }
   .nav__close {
     display: none !important;
   }
+.nav__links {
+  position: static !important;
+  width: auto !important;
+  max-width: none !important;
+  height: auto !important;
+  padding: 0 !important;
+  background: transparent !important;
+  box-shadow: none !important;
+}
+
+   
 }
 
 @media (max-width: 820px) {
