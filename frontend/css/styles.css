@@ -205,6 +205,15 @@ a:hover { text-decoration: underline; }
   transform: translateX(0);
 }
 
+.nav__links.is-open::before {
+  content: "";
+  position: fixed;
+  top: 0;
+  right: 100%;
+  width: 100vw;
+  height: 100vh;
+  background: rgba(15, 23, 42, 0.65);
+}
 
 
 
