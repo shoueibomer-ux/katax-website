@@ -208,7 +208,7 @@ a:hover { text-decoration: underline; }
 body:has(.nav__links.is-open)::before {
   content: "";
   position: fixed;
-  inset: 0;
+top: 0; right: 78%; bottom: 0; left: 0;
   background: rgba(15, 23, 42, 0.68);
   z-index: 999;
 }
