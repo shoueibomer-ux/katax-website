@@ -189,7 +189,15 @@ a:hover { text-decoration: underline; }
   width: 78%;
   max-width: 320px;
   height: 100vh;
-  background: var(--paper-2);
+background:
+  repeating-linear-gradient(
+    to bottom,
+    #ffffff 0,
+    #ffffff 46px,
+    rgba(22, 33, 62, 0.06) 47px,
+    #ffffff 48px
+  );
+
   border-left: 1px solid var(--line);
   padding: 90px 20px 24px;
   flex-direction: column;
