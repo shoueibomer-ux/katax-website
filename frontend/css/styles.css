@@ -22,7 +22,7 @@
   --sans: 'IBM Plex Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
   --mono: 'IBM Plex Mono', 'SFMono-Regular', Consolas, monospace;
 
-  --max: 1120px;
+  --max: 960px;
   --radius: 4px;
 }
 
@@ -1094,3 +1094,10 @@ body:has(.nav__links.is-open)::before {
 .nav__logo:hover img {
   transform: translateY(-1px);
 }
+   @media (min-width: 821px) {
+  body {
+    zoom: 0.85;
+  }
+}
+
+
