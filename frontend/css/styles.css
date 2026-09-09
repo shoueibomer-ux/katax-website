@@ -278,7 +278,8 @@ top: 0; right: 78%; bottom: 0; left: 0;
   font-size: 20px;
 }
 
-/* Final mobile menu design */
+@media (max-width: 820px) {
+   /* Final mobile menu design */
 .nav__links {
   width: 60%;
   max-width: 320px;
