@@ -278,6 +278,62 @@ top: 0; right: 78%; bottom: 0; left: 0;
   font-size: 20px;
 }
 
+/* Final mobile menu design */
+.nav__links {
+  width: 64%;
+  max-width: 320px;
+  padding: 18px 16px 24px;
+
+  background:
+    repeating-linear-gradient(
+      to bottom,
+      #ffffff 0,
+      #ffffff 47px,
+      rgba(22, 33, 62, 0.025) 48px
+    );
+
+  box-shadow: -8px 0 24px rgba(15, 23, 42, 0.08);
+}
+
+body:has(.nav__links.is-open)::before {
+  top: 0;
+  left: 0;
+  bottom: 0;
+  right: min(64vw, 320px);
+  background: rgba(15, 23, 42, 0.58);
+  z-index: 999;
+}
+
+.nav__mobile-head {
+  padding: 8px 4px 16px;
+  margin-bottom: 14px;
+}
+
+.nav__menu-logo {
+  width: 145px;
+}
+
+.nav__links a {
+  min-height: 54px;
+  padding: 12px 10px;
+  border-radius: 0;
+  border-bottom: 1px solid rgba(22, 33, 62, 0.10);
+}
+
+.nav__links a.active,
+.nav__links a.is-active {
+  color: var(--accent);
+  background: rgba(192, 39, 45, 0.08);
+  border-radius: 6px;
+}
+
+.nav__icon {
+  width: 26px;
+  font-size: 20px;
+}
+
+
+
 }
 
 /* ---------- Hero ---------- */
