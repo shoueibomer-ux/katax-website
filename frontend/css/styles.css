@@ -1099,5 +1099,11 @@ body:has(.nav__links.is-open)::before {
     zoom: 0.85;
   }
 }
+   @media (min-width: 821px) {
+  .hero {
+    padding: 36px 0 28px;
+  }
+}
+
 
 
